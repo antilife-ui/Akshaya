@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-slate-800 font-sans text-white antialiased; margin: 0; }
+
+/* Page background: put your photo at public/factory.jpg; gradient shows until then */
+.bg-factory {
+  background-image: url('/factory.jpg');
+  background-size: cover;
+  background-position: center bottom;
+}
+
+@layer components {
+/* Glass card */
+.glass {
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.32);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  box-shadow: 0 10px 40px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), background .4s, border-color .4s, box-shadow .5s, backdrop-filter .4s;
+  animation: cardIn .9s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: var(--d, 0ms);
+}
+.glass::before { /* cursor-following light */
+  content: ''; position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.35), transparent 60%);
+  transition: opacity .4s;
+}
+.glass::after { /* sheen sweep */
+  content: ''; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: skewX(-18deg);
+}
+.glass:hover, .glass:focus-visible {
+  transform: translateY(-6px) scale(1.012);
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.6);
+  box-shadow: 0 24px 60px rgba(15,23,42,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+  outline: none;
+}
+.glass:hover::before, .glass:focus-visible::before { opacity: 1; }
+.glass:hover::after, .glass:focus-visible::after { left: 130%; transition: left .9s ease; }
+.glass:active { transform: translateY(-2px) scale(.995); }
+.glass .num { transition: transform .5s cubic-bezier(.2,.8,.2,1), letter-spacing .5s; }
+.glass:hover .num, .glass:focus-visible .num { transform: scale(1.18); }
+
+}
+
+@keyframes cardIn { from { opacity: 0; transform: translateY(28px) scale(.96); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
+.fade-down { animation: fadeDown .9s ease both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
